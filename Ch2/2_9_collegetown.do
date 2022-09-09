@@ -51,11 +51,11 @@ scalar sse_2=e(rss)
 // 在 sqft=20的地方，算出所有(*)變數的邊際效果
 margin, dydx(*) at(sqft=20)
 // 存起來。出來的結果r(b) 是矩陣，所以要用這種噁心的寫法抓出來
-scalar slope_at_20 = _b[c.sqft#c.sqft]
+scalar slope_at_20 = el(r(b), 1, 1)
 
 // 如果不說是 dydx，那他出來的會是在 20 這個地方，他的平均預測會是多少（單變數可以這樣解釋）
 margin, at(sqft=20)
-scalar pred_at_20 = _b[c.sqft#c.sqft]
+scalar pred_at_20 = el(r(b), 1, 1)
 
 twoway  (scatter price sqft ,msymbol(smx)) ///
 		(line yhat2 sqft , sort) ///
