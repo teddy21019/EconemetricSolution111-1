@@ -5,20 +5,20 @@
 clear 
 graph drop _all
 
-// 首先，告訴Stata你現在要用的資料是在哪一個資料夾裡面，並且移進去
-// 請改成自己的
-cd "/Users/abc/Desktop/111-1/東海計量/助教/datafiles"
+// 首先，告訴Stata你現在要在哪一個資料夾裡面操作，並且移(change directory, cd)進去
+// 請改成自己的路徑！！
+cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
 
-// 因為已經告訴他資料在哪一個資料夾，你可以直接把 ***.dta 的 ***，用 use 抓出來。
-// ！！注意：只有檔案是 .dta 可以直接用 use。如果資料是 excel 或是 csv 會需要其他指令。
-use cps5_small
+// 指定資料的位置
+use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/cps5_small"
+
 
 // 建立 wage 的對數值
 gen lwage = log(wage)
 label var lwage "Log of wage"
 
 // 在繪製 lwage的直方圖時，可以加上 norm ，stata會 fit 一個最適合的常態分佈
-hist lwage, norm
+hist lwage, norm saving("Q2_15_fig1", replace)
 quietly sum lwage, detail
 di "Skewness:	"r(skewness)
 di "Kurtosis:	"r(kurtosis)
@@ -37,7 +37,7 @@ margin, at(educ=(12,16)) expression(exp(xb()))
 margin, dydx(*) at(educ=(12,16)) expression(exp(xb()))
 
 quietly margin, dydx(*) at(educ=(10(1)20)) expression(exp(xb()))
-marginsplot
+marginsplot, saving("Q2_15_fig2", replace)
 
 predict yhat_ln, xb
 gen yhat_ln_exp = exp(yhat_ln)
@@ -47,7 +47,8 @@ reg wage educ
 est store lin_fit
 predict yhat, xb
 label var yhat "Linear Regression"
-twoway (scatter wage educ) (line yhat_ln_exp educ, sort) (line yhat educ, sort) 
+twoway (scatter wage educ) (line yhat_ln_exp educ, sort) (line yhat educ, sort) ///
+		,saving("Q2_15_fig3", replace)
 // 使用單純線性迴歸容易出現預測薪資小於 0 的情況
 
 
@@ -59,6 +60,5 @@ scalar sse_ln = _b[res_ln_exp]
 di "SSE for log-linear regression:		" sse_ln
 
 est restore lin_fit
-di "SSE for linear regression:		" e(rss)
-
+di "SSE for linear regression:			" e(rss)
 

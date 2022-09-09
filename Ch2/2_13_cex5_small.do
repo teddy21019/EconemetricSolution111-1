@@ -5,15 +5,16 @@
 clear 
 graph drop _all
 
-// 首先，告訴Stata你現在要用的資料是在哪一個資料夾裡面，並且移進去
-// 請改成自己的
-cd "/Users/abc/Desktop/111-1/東海計量/助教/datafiles"
 
-// 因為已經告訴他資料在哪一個資料夾，你可以直接把 ***.dta 的 ***，用 use 抓出來。
-// ！！注意：只有檔案是 .dta 可以直接用 use。如果資料是 excel 或是 csv 會需要其他指令。
-use cex5_small
+// 首先，告訴Stata你現在要在哪一個資料夾裡面操作，並且移(change directory, cd)進去
+// 請改成自己的路徑！！
+cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
 
-histogram foodaway
+// 指定資料的位置
+use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/cex5_small"
+
+
+histogram foodaway, saving("Q2_13_fig1", replace)
 sum foodaway , detail
 
 // quietly 可以不把結果印出來，只放記憶體中
@@ -33,7 +34,7 @@ di "Median of foodaway for lower education: 	" r(p50)
 // 建立對數化的數值
 gen ln_foodaway = log(foodaway)
 label var ln_foodaway "Log of foodaway"
-histogram ln_foodaway
+histogram ln_foodaway, saving("Q2_13_fig2", replace)
 
 quietly sum foodaway
 di "N:					"r(N)
@@ -46,11 +47,12 @@ di "Foodaway is zero	"r(N)
 reg ln_foodaway income
 predict yhat_ln, xb
 
-twoway (scatter ln_foodaway income, msize(vsmall)) (line yhat_ln income, sort)
+twoway (scatter ln_foodaway income, msize(vsmall)) (line yhat_ln income, sort) ///
+		, saving("Q2_13_fig3", replace)
 
 predict res_ln, residual
 
-twoway (scatter res_ln income)
+twoway (scatter res_ln income), saving("Q2_13_fig4", replace)
 
 
 

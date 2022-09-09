@@ -3,19 +3,20 @@
 
 // 把上一次執行的先通通清除，重新開始
 clear 
+graph drop _all
 
-// 首先，告訴Stata你現在要用的資料是在哪一個資料夾裡面，並且移(change directory, cd)進去
+// 首先，告訴Stata你現在要在哪一個資料夾裡面操作，並且移(change directory, cd)進去
 // 請改成自己的路徑！！
-cd "/Users/abc/Desktop/111-1/東海計量/助教/datafiles"
+cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
 
-// 因為已經告訴他資料在哪一個資料夾，你可以直接把 ***.dta 的 ***，用 use 抓出來。
-// ！！注意：只有檔案是 .dta 可以直接用 use。如果資料是 excel 或是 csv 會需要其他指令。
-use collegetown
+// 指定資料的位置
+use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/collegetown"
+
 
 // 有 x y 的都要用 twoway
 // 不同作圖用 () 分開來
 // scatter y x 用來畫散佈圖
-twoway (scatter price sqft)
+twoway (scatter price sqft), saving("Q2_9_fig1", replace)
 
 
 
@@ -33,7 +34,7 @@ predict res1, residual
 scalar sse_1=e(rss)
 
 // 剛剛建立的 yhat1 當 y，sqft一樣當 x，做一條直線
-twoway (scatter price sqft) (line yhat1 sqft , sort)
+twoway (scatter price sqft) (line yhat1 sqft , sort), saving("Q2_9_fig2", replace)
 
 
 //==========================================
@@ -58,14 +59,15 @@ scalar pred_at_20 = _b[c.sqft#c.sqft]
 
 twoway  (scatter price sqft ,msymbol(smx)) ///
 		(line yhat2 sqft , sort) ///
-		(function y = slope_at_20 * (x-20) + pred_at_20, range(sqft) ) // 熟悉的點斜式
-		
+		(function y = slope_at_20 * (x-20) + pred_at_20, range(sqft) ) /// 熟悉的點斜式
+		, saving("Q2_9_fig3", replace)
 
 // 計算彈性也有直接做法
 margin, eyex(*) at(sqft=20)
 
 // 這邊示範調整不同形狀
-twoway (scatter res1 sqft, msize(small)) (scatter res2 sqft, msize(small) msymbol(triangle))
+twoway (scatter res1 sqft, msize(small)) (scatter res2 sqft, msize(small) msymbol(triangle)) ///
+		, saving("Q2_9_fig4", replace)
 
 // 在Stata中，如果要印出文字或值（像是python裡的 print ），需要用 display
 //或是縮寫 di
