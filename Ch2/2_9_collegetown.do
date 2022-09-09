@@ -4,7 +4,8 @@
 // 把上一次執行的先通通清除，重新開始
 clear 
 
-// 首先，告訴Stata你現在要用的資料是在哪一個資料夾裡面，並且移進去
+// 首先，告訴Stata你現在要用的資料是在哪一個資料夾裡面，並且移(change directory, cd)進去
+// 請改成自己的路徑！！
 cd "/Users/abc/Desktop/111-1/東海計量/助教/datafiles"
 
 // 因為已經告訴他資料在哪一個資料夾，你可以直接把 ***.dta 的 ***，用 use 抓出來。
@@ -49,11 +50,11 @@ scalar sse_2=e(rss)
 // 在 sqft=20的地方，算出所有(*)變數的邊際效果
 margin, dydx(*) at(sqft=20)
 // 存起來。出來的結果r(b) 是矩陣，所以要用這種噁心的寫法抓出來
-scalar slope_at_20 = el(r(b),1,1)
+scalar slope_at_20 = _b[c.sqft#c.sqft]
 
 // 如果不說是 dydx，那他出來的會是在 20 這個地方，他的平均預測會是多少（單變數可以這樣解釋）
 margin, at(sqft=20)
-scalar pred_at_20 = el(r(b), 1,1)
+scalar pred_at_20 = _b[c.sqft#c.sqft]
 
 twoway  (scatter price sqft ,msymbol(smx)) ///
 		(line yhat2 sqft , sort) ///
