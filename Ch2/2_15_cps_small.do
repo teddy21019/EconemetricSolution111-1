@@ -13,6 +13,14 @@ cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
 use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/cps5_small"
 
 
+    				//======================//
+    				//						//
+    				//			(a)			//
+    				//						//
+    				//======================//
+    				//	觀察變數分布 
+
+
 // 建立 wage 的對數值
 gen lwage = log(wage)
 label var lwage "Log of wage"
@@ -27,17 +35,49 @@ di "Kurtosis:	"r(kurtosis)
 // 也可以用一些內建檢定來判斷是不是符合常態分佈
 sktest lwage
 
+    				//======================//
+    				//						//
+    				//			(b)			//
+    				//						//
+    				//======================//
+    				//	對數 OLS 
+
+
 //============ Log linear regression ==========
 reg lwage educ
 est store ln_fit
 
+    				//======================//
+    				//						//
+    				//			(c)			//
+    				//						//
+    				//======================//
+    				//	薪資預測 
+
+
 // 預測 12, 16 年教育程度的薪資影響。注意要加上 expression，因為我們回歸是對 ln(wage)
 margin, at(educ=(12,16)) expression(exp(xb()))
+
+    				//======================//
+    				//						//
+    				//			(d)			//
+    				//						//
+    				//======================//
+    				//	邊際效果 
+
 
 margin, dydx(*) at(educ=(12,16)) expression(exp(xb()))
 
 quietly margin, dydx(*) at(educ=(10(1)20)) expression(exp(xb()))
 marginsplot, saving("Q2_15_fig2", replace)
+
+    				//======================//
+    				//						//
+    				//			(e)			//
+    				//						//
+    				//======================//
+    				//	視覺化模型比較 
+
 
 predict yhat_ln, xb
 gen yhat_ln_exp = exp(yhat_ln)
@@ -51,6 +91,13 @@ twoway (scatter wage educ) (line yhat_ln_exp educ, sort) (line yhat educ, sort) 
 		,saving("Q2_15_fig3", replace)
 // 使用單純線性迴歸容易出現預測薪資小於 0 的情況
 
+
+    				//======================//
+    				//						//
+    				//			(f)			//
+    				//						//
+    				//======================//
+    				//	比較殘差 
 
 
 capture gen res_ln_exp = (yhat_ln_exp - wage)^2

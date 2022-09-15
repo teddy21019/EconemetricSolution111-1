@@ -16,6 +16,13 @@ use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/stockton5_small"
 replace sprice = sprice/1000
 
 
+
+    				//======================//
+    				//						//
+    				//			(a)			//
+    				//						//
+    				//======================//
+    				//	OLS 估計
 //=========== Linear Regression============
 reg sprice age
 estimate store lin_fit
@@ -24,14 +31,24 @@ predict yhat_linear, xb
 margin, at(age=30)
 di _b[_cons] + 30 * _b[age]
 
+
+    				//======================//
+    				//						//
+    				//			(b)			//
+    				//						//
+    				//======================//
+    				//	繪製 OLS
 // plot
 twoway (scatter sprice age, msize(vsmall)) (line yhat_linear age, sort), saving("Q2_10_fig1", replace)
 
-//============ Before fitting log ==========
-/*
-從散佈圖中可以看到，價格（y軸）變化很大。
-我們可以看看它的分布
-*/
+
+					//============ Before fitting log ==========
+					/*
+					從散佈圖中可以看到，價格（y軸）變化很大。
+					我們可以看看它的分布
+					*/
+
+
 histogram sprice, name("Q2_10_fig2_1")
 codebook sprice
 
@@ -41,12 +58,26 @@ label var ln_sprice "Log of sprice"
 histogram ln_sprice , name("Q2_10_fig2_2")
 //看起來正常多了
 
+    				//======================//
+    				//						//
+    				//			(c)			//
+    				//						//
+    				//======================//
+    				//	對數後 OLS
+					
 //============ Log-linear regression ========
 reg ln_sprice age
 estimate store ln_fit
 predict yhat_ln, xb
 gen yhat_ln_exp = exp(yhat_ln)
 
+    				//======================//
+    				//						//
+    				//			(d)			//
+    				//						//
+    				//======================//
+    				//	比較兩 OLS 結果
+					
 twoway (scatter sprice age, msize(vsmall)) (line yhat_ln_exp age, sort), ///
 		saving("Q2_10_fig3", replace)
 
@@ -61,9 +92,16 @@ margin, at(age=30) expression(	exp( xb() )	)
 margin, at(age=30) expression(	exp( xb() ) * 1000 )
 
 
+    				//======================//
+    				//						//
+    				//			(f)			//
+    				//						//
+    				//======================//
+    				//	模型選擇
+					
 //====== Compare SSE =======
 estimate restore lin_fit
 di "SSE for Linear Regression: " e(rss)
 
 estimate restore ln_fit
-di "SSE for Log-Linear Regression: " e(rss)
+di "SSE for Log-Linear Regression: " e(rss)		// 這是錯的！想想原因

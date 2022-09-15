@@ -13,13 +13,25 @@ cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
 use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/collegetown"
 
 
+
+
+    				//======================//
+    				//						//
+    				//			(a)			//
+    				//						//
+    				//======================//
+    
 // 有 x y 的都要用 twoway
 // 不同作圖用 () 分開來
 // scatter y x 用來畫散佈圖
 twoway (scatter price sqft), saving("Q2_9_fig1", replace)
 
 
-
+    				//======================//
+    				//						//
+    				//			(b)			//
+    				//						//
+    				//======================//
 
 // price 對 sqft 回歸
 reg price sqft 
@@ -37,9 +49,14 @@ scalar sse_1=e(rss)
 twoway (scatter price sqft) (line yhat1 sqft , sort), saving("Q2_9_fig2", replace)
 
 
-//==========================================
-//================= 平方項===================
 
+
+    				//======================//
+    				//						//
+    				//			(c)			//
+    				//						//
+    				//======================//
+    				//	平方項
 
 // 用 # 來代表回歸式中的交乘或是平方，會比建立一個新的變數 sqft2 = sqft^2 來得好
 // 原因是在用 margin 求邊際效果的時候，stata會把新建立的變數當獨立變數，會很麻煩
@@ -57,18 +74,47 @@ scalar slope_at_20 = el(r(b), 1, 1)
 margin, at(sqft=20)
 scalar pred_at_20 = el(r(b), 1, 1)
 
+
+    				//======================//
+    				//						//
+    				//			(d)			//
+    				//						//
+    				//======================//
+    				//	畫出切線
+					
 twoway  (scatter price sqft ,msymbol(smx)) ///
 		(line yhat2 sqft , sort) ///
 		(function y = slope_at_20 * (x-20) + pred_at_20, range(sqft) ) /// 熟悉的點斜式
 		, saving("Q2_9_fig3", replace)
 
+
+    				//======================//
+    				//						//
+    				//			(e)			//
+    				//						//
+    				//======================//
+    				//	彈性
 // 計算彈性也有直接做法
 margin, eyex(*) at(sqft=20)
 
+
+    				//======================//
+    				//						//
+    				//			(f)			//
+    				//						//
+    				//======================//
+    				//	比較殘差
 // 這邊示範調整不同形狀
 twoway (scatter res1 sqft, msize(small)) (scatter res2 sqft, msize(small) msymbol(triangle)) ///
 		, saving("Q2_9_fig4", replace)
 
+
+    				//======================//
+    				//						//
+    				//			(e)			//
+    				//						//
+    				//======================//
+    				//	比較SSE
 // 在Stata中，如果要印出文字或值（像是python裡的 print ），需要用 display
 //或是縮寫 di
 di "SSE for the first regression: " sse_1
