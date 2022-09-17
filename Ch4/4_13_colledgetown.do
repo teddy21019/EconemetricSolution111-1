@@ -128,14 +128,18 @@ scalar natural_prediction = exp(_b[_cons] + 27*_b[sqft]) * 1000
 // 考慮真實分佈後的預測，要乘上修正項
 scalar correct_prediction = exp(_b[_cons] + 27*_b[sqft]) * correction * 1000
 
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的點估計"
-di "直觀預測(Natural Prediction)		: "natural_prediction
-di "正確預測(Correct Prediction)		: "correct_prediction
+di "Natural Prediction		: " natural_prediction
+di "Correct Prediction		: " correct_prediction
 
+// 用estadd 把結果放到報表裡，最後一次印出來
+estadd scalar NP=natural_prediction
+estadd scalar CP=correct_prediction
 
 			//---------區間估計
 			// 詳見課本
 
+scalar df = e(df_r)
+scalar tc = invttail(df,.025)
 
 // 
 quietly{
@@ -145,8 +149,9 @@ scalar hat = el(r(b), 1, 1)						// 取出來存在 hat
 margins, at(sqft=27) predict(stdf) nose force	// 此模型下的 stdf，用來計算區間估計
 scalar stdf = el(r(b), 1, 1)					// 存起來
 }
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的區間估計"
-di "(" exp(hat - tc*stdf)*1000 ", " exp(hat + tc*stdf)*1000 ")"
+estadd scalar CI_lower=exp(hat - tc*stdf)*1000	
+estadd scalar CI_upper=exp(hat + tc*stdf)*1000	
+
 
 			/*========================
 			//		Log-Log 回歸的預測點估計
@@ -165,20 +170,17 @@ estimates restore log_log
 di e(estimates_title)
 scalar correction=exp(e(rmse)^2/2)
 
-
 scalar natural_prediction = exp(_b[_cons] + log(27)*_b[ln_sqft]) * 1000
 // 考慮真實分佈後的預測，要乘上修正項
 scalar correct_prediction = exp(_b[_cons] + log(27)*_b[ln_sqft]) * correction * 1000
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的點估計"
-di "直觀預測(Natural Prediction)		: "natural_prediction
-di "正確預測(Correct Prediction)		: "correct_prediction
-
+estadd scalar NP=natural_prediction
+estadd scalar CP=correct_prediction
 
 			//---------區間估計
 			// 詳見課本
 
 
-// 不知道為什麼在 margins 裡面，不能計算 log(27)，所以我先在外面計算
+// 不知道為什麼在 margins 裡面，不能直接計算 log(27)，所以我先在外面計算
 local log27 = log(27)
 
 quietly{
@@ -188,9 +190,8 @@ scalar hat = el(r(b), 1, 1)						// 取出來存在 hat
 margins, at(ln_sqft = `log27') predict(stdf) nose force			// 此模型下的 stdf，用來計算區間估計
 scalar stdf = el(r(b), 1, 1)					// 存起來
 }
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的區間估計"
-di "(" exp(hat - tc*stdf)*1000 ", " exp(hat + tc*stdf)*1000 ")"
-
+estadd scalar CI_lower=exp(hat - tc*stdf)*1000	
+estadd scalar CI_upper=exp(hat + tc*stdf)*1000	
 
 			/*========================
 			//		Lin-Lin 回歸的預測點估計
@@ -217,12 +218,24 @@ margins, at(sqft=27) predict(stdf) nose force    // se of forecast
 matrix marg = r(b)
 scalar stdf = marg[1,1]
 }
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的點估計：" hat
+di "模型：" e(estimates_title) " 在 sqft = 27 時，預測的點估計：" hat
+estadd scalar NP=hat * 1000
 
-
-di "模型：" e(estimates_title) " 在stdf = 27 時，預測的區間估計"
+di "模型：" e(estimates_title) " 在 sqft = 27 時，預測的區間估計"
 display "(" (hat - tc*stdf)*1000 ", " (hat + tc*stdf)*1000 ")"
 
+estadd scalar CI_lower=(hat - tc*stdf)*1000	
+estadd scalar CI_upper=(hat + tc*stdf)*1000	
+
+			/*========================
+			//		結果呈報
+			*/
+			
+esttab, mti stats(NP CP CI_lower CI_upper  ///
+		,labels("Natural Predictor" "Correct Predictor" "95%CI Lower" "95%CI Upper") ///
+		) drop(*) wide nonotes title("Predictions for 3 model at SQFT=27")
+		
+		
     				//======================//
     				//						//
     				//			(h)			//
