@@ -7,11 +7,12 @@ graph drop _all
 
 // 首先，告訴Stata你現在要在哪一個資料夾裡面操作，並且移(change directory, cd)進去
 // 請改成自己的路徑！！
-cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
+// cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
+cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch2\Results"
 
 // 指定資料的位置
-use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/stockton5_small"
-
+// use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/stockton5_small"
+use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\stockton5_small"
 
 replace sprice = sprice/1000
 
@@ -105,3 +106,12 @@ di "SSE for Linear Regression: " e(rss)
 
 estimate restore ln_fit
 di "SSE for Log-Linear Regression: " e(rss)		// 這是錯的！想想原因
+
+
+
+
+//正確作法
+gen res_2 = (yhat_ln_exp - sprice)^2
+quietly sum res_2
+
+di "SSE for Log-Linear Regression: " r(sum)	

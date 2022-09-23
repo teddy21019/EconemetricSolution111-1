@@ -101,8 +101,8 @@ twoway (scatter wage educ) (line yhat_ln_exp educ, sort) (line yhat educ, sort) 
 
 
 capture gen res_ln_exp = (yhat_ln_exp - wage)^2
-total res_ln_exp
-scalar sse_ln = _b[res_ln_exp]
+quietly sum res_ln_exp
+scalar sse_ln = r(sum)
 
 di "SSE for log-linear regression:		" sse_ln
 
