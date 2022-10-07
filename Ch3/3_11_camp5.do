@@ -1,23 +1,31 @@
 clear
 graph drop _all
 
-//cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch3\Results"
-//use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\capm5"
+cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch3\Results"
+use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\capm5"
 
-cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch3/Results"
-use "/Users/abc/Desktop/111-1/東海計量/Solution/DATA/capm5"
+// cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch3/Results"
+// use "/Users/abc/Desktop/111-1/東海計量/Solution/DATA/capm5"
 
 qui sum
 scalar num = r(N)-2
 
-gen prem_xom 	= xom - riskfree
-gen prem_msft 	= msft - riskfree
-gen prem_ge		= ge  - riskfree
-gen prem_ibm	= ibm - riskfree
-gen prem_ford	= ford - riskfree
-gen prem_dis	= dis - riskfree
+global companies_code_all "xom msft ge ibm ford dis mkt"
 
-gen prem_mkt	= mkt - riskfree
+foreach c of var ge-mkt{
+	gen prem_`c'  = `c' - riskfree
+}
+
+// 上面相當於：
+// gen prem_xom 	= xom - riskfree
+// gen prem_msft 	= msft - riskfree
+// gen prem_ge		= ge  - riskfree
+// gen prem_ibm	= ibm - riskfree
+// gen prem_ford	= ford - riskfree
+// gen prem_dis	= dis - riskfree
+//
+// gen prem_mkt	= mkt - riskfree
+
 
     				//======================//
     				//						//
@@ -26,15 +34,19 @@ gen prem_mkt	= mkt - riskfree
     				//======================//
     				//	Beta : Exxon-Mobil vs Microsoft 
 
-
+foreach c of var ge-xom{
+	qui eststo est_`c' : reg prem_`c' prem_mkt
+}
+					
+					
 // 這邊用 estout 套件，把結果存起來
 eststo clear
 //		名稱	顯示標題				指令
 eststo est_xom, title("Exxon-Mobil"):		reg prem_xom prem_mkt
-eststo est_ms, title("Microsoft"):		reg prem_msft prem_mkt
+eststo est_msft, title("Microsoft"):		reg prem_msft prem_mkt
 
 //		一欄內	係數		信心水準	r2
-esttab, cell( b(fmt(3)) ci(fmt(3) par) ) r2
+esttab est_xom est_msft, cell( b(fmt(3)) ci(fmt(3) par) ) r2
 
 
 

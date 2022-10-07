@@ -7,10 +7,10 @@ graph drop _all
 
 // 首先，告訴Stata你現在要在哪一個資料夾裡面操作，並且移(change directory, cd)進去
 // 請改成自己的路徑！！
-cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch2/Results"
+cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch2\Results"
 
 // 指定資料的位置
-use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/collegetown"
+use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\collegetown"
 
 
 
@@ -25,6 +25,7 @@ use "/Users/abc/Desktop/111-1/東海計量/助教/datafiles/collegetown"
 // 不同作圖用 () 分開來
 // scatter y x 用來畫散佈圖
 twoway (scatter price sqft), saving("Q2_9_fig1", replace)
+graph export "FigA.png"
 
 
     				//======================//
@@ -34,7 +35,7 @@ twoway (scatter price sqft), saving("Q2_9_fig1", replace)
     				//======================//
 
 // price 對 sqft 回歸
-reg price sqft 
+eststo: reg price sqft 
 // 模型建立完之後都會有一個預測值。以下命名叫做 yhat1
 // 這一個指令會把所有資料右邊都加一欄，用來存預測值
 predict yhat1, xb
@@ -60,7 +61,7 @@ twoway (scatter price sqft) (line yhat1 sqft , sort), saving("Q2_9_fig2", replac
 
 // 用 # 來代表回歸式中的交乘或是平方，會比建立一個新的變數 sqft2 = sqft^2 來得好
 // 原因是在用 margin 求邊際效果的時候，stata會把新建立的變數當獨立變數，會很麻煩
-reg price c.sqft#c.sqft
+estsot: reg price c.sqft#c.sqft
 predict yhat2, xb
 predict res2, residual
 scalar sse_2=e(rss)
@@ -73,6 +74,11 @@ scalar slope_at_20 = el(r(b), 1, 1)
 // 如果不說是 dydx，那他出來的會是在 20 這個地方，他的平均預測會是多少（單變數可以這樣解釋）
 margin, at(sqft=20)
 scalar pred_at_20 = el(r(b), 1, 1)
+
+
+// Bonus
+// 做出回歸比較表格，並輸出成word
+esttab using "2_9.rtf"
 
 
     				//======================//
@@ -119,3 +125,5 @@ twoway (scatter res1 sqft, msize(small)) (scatter res2 sqft, msize(small) msymbo
 //或是縮寫 di
 di "SSE for the first regression: " sse_1
 di "SSE for the second regression: " sse_2
+
+
