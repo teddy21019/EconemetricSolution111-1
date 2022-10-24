@@ -1,0 +1,61 @@
+\begin{frame}
+    \frametitle{a) $H_0$ : 在 2000 $sqft$ 時邊際效果$\le $ 13,000 }
+
+    使用二次迴歸模型 
+    \begin{equation*}
+        PRICE = \alpha_1 + \alpha_2 SQFT^2 + e
+    \end{equation*}
+    檢定以下假設：
+
+    \begin{quote}
+    將 2,000 平方英尺房屋的面積增加 100 平方英尺，對預期房價的邊際影響小於等於13,000 美元，相對於期邊際影響將大於 13,000 美元的對立假設。
+    \end{quote}
+    使用 $5\%$ 的顯著水準。明確指出使用的檢定統計量，拒絕區域的p值。
+\end{frame}
+
+\begin{frame}[plain]
+    此模型的預期房價為 
+    \begin{equation*}
+        E[PRICE] = \alpha_1 + \alpha_2 SQFT^2
+    \end{equation*}
+    因此面積的邊際效果為
+    \begin{equation}
+        2\alpha_2 SQFT
+    \end{equation}
+    \begin{block}{$H_0, H_a$}
+        \begin{align*}
+            H_0 &: 2\alpha_2 SQFT \le 13 \\
+            H_a &: 2\alpha_2 SQFT > 13 \\
+        \end{align*}
+    \end{block}
+
+    (a) 小題中，$SQFT$ 應帶入 20
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stata 指令}
+    \begin{itemize}
+        \item Stata 本身沒有單尾的檢定
+        \item 指令 \texttt{test} 做的是雙尾檢定
+        \item \texttt{margin} 的值也是雙尾檢定
+        \item 需要自己從統計量上下手
+    \end{itemize}
+
+    對立假設是 $H_a : 2\alpha_2 SQFT > 13$ ，因此要進行右尾檢定
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{enumerate}
+        \item 算出在 2000 平方英尺（$SQFT=20$）時的邊際效果 $\hat{m}$
+        \item 找出 t 統計量
+        \footnote{如何找出 $\hat{m}$以及$s.e(m)$？}
+        \begin{equation*}
+            t = \frac{\hat{m} - 13}{s.e(m)}
+        \end{equation*}
+        \item 計算p-value，也就是右尾的面積
+        \begin{alertblock}{注意使用的語法}
+            Stata 計算 t分佈右尾的「函數指令」為\texttt{ttail df t}，但是不能只打這樣，要加上 \texttt{di} 才會計算！
+        \end{alertblock}
+        \item 判斷虛無假設
+    \end{enumerate}
+\end{frame}

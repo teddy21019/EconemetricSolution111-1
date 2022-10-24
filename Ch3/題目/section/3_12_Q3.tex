@@ -1,0 +1,12 @@
+\begin{frame}
+    \frametitle{ c） 在 2000 $sqft$時，房價的區間估計}
+    使用 (a) 小題中的二次回歸模型，估計 2,000 平方英尺房屋的預期價格$E[PRICE \mid SQFT] = \alpha_1 + \alpha_2 SQFT^2$。建立預期價格的 $95\%$區間估計。向一般大眾描述你的區間估計。
+    \vfill
+    做法很單純，
+
+    \texttt{lincom \_b[\_cons] + \_b[c.sqft \# c.sqft]*(20*20)}
+    \vfill
+    或是甚至用 \texttt{margins} 指令
+
+    \texttt{margin, at(sqft=20)}
+\end{frame}

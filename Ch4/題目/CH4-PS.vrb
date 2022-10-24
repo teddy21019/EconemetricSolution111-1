@@ -1,0 +1,12 @@
+\frametitle{G,H 為例 （續）}
+    建立殘差
+    \begin{lstlisting}
+estimates restore est_g
+predict res_h, residual\end{lstlisting}
+    繪製殘差直方圖
+    \begin{lstlisting}
+histogram res_h, name("Q4_11_hist_3", replace)
+graph export "Q4_11_hist_3.eps", name(Q4_11_hist_3) replace
+
+twoway (scatter res_h ln_totexp ), name("Q4_11_scatter_3", replace)
+graph export "Q4_11_scatter_3.eps", name("Q4_11_scatter_3") replace\end{lstlisting}

@@ -7,6 +7,10 @@ graph drop _all
 cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch3/Results"
 use "/Users/abc/Desktop/111-1/東海計量/Solution/DATA/collegetown"
 
+gen sqft2=sqft^2
+label var sqft2 "Square of sqft"
+twoway(scatter price sqft2), name(view_price_sqft2)
+graph export "Visualize.eps", name(view_price_sqft2)
 
 
     				//======================//

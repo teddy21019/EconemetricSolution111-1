@@ -1,0 +1,18 @@
+\begin{frame}
+    \frametitle{B,E,G}
+    採用不同的模型
+    \begin{enumerate}
+        \item[b] $PFOOD = \beta_1 + \beta_2 \ln(TOTEXP) + e$
+        \item[e] $\ln(FOOD) = \alpha_1 + \alpha_2\ln(TOTEXP) + v$
+        \item[g]  $FOOD = \gamma_1 + \gamma_2\ln(TOTEXP) + u$
+    \end{enumerate}
+    \vfill
+    同時估計彈性
+    \begin{enumerate}
+        \item[b] $\varepsilon_b = \frac{\beta_1 + \beta_2[\ln(TOTEXP)+1]}{\beta_1 + \beta_2\ln(TOTEXP)}$
+        \item[e] $\varepsilon_e = \frac{d \ln(FOOD)}{d \ln(TOTEXP)} = \alpha_2$
+        \item[g]  $\varepsilon_g = \frac{\gamma_2}{\gamma_1 + \gamma_2 \ln(TOTEXP)}$
+    \end{enumerate}
+    
+
+\end{frame}
