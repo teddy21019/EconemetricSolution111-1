@@ -2,12 +2,12 @@ clear
 graph drop _all
 eststo clear
 
-cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch4\Results"
-use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\malawi_small"
+//cd "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch4\Results"
+//use "C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\DATA\malawi_small"
 
 //
-// cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch3/Results"
-// use "/Users/abc/Desktop/111-1/東海計量/Solution/DATA/capm5"
+ cd "/Users/abc/Desktop/111-1/東海計量/Solution/Ch4/Results"
+ use "/Users/abc/Desktop/111-1/東海計量/Solution/DATA/malawi_small"
 
 
     				//======================//
@@ -27,8 +27,18 @@ di "自己查"
     				//						//
     				//======================//
     				//	觀察食物比例 vs 總花費 
+					
+scatter pfood totexp, name(simple_scatter, replace)
+graph export "Q4_11_simple_scatter.eps", name(simple_scatter) replace
 
+hist totexp, name(hist_of_totexp, replace)
+graph export "Q4_11_hist_of_totexp.eps", name(hist_of_totexp) replace
 gen ln_totexp = log(totexp)
+
+hist ln_totexp, name(hist_of_ln_totexp, replace)
+
+graph combine hist_of_totexp hist_of_ln_totexp, col(1)
+graph export "Q4_11_compare_totexp.eps", replace
 
 		//===================
 		//		(1)		報告回歸結果
@@ -104,8 +114,13 @@ elas total_ex_p75 est_b
 estimates restore est_b
 predict res_b, residual
 
-histogram res_b, saving("Q4_11_hist_1", replace)
-twoway (scatter res_b ln_totexp ), saving("Q4_11_scatter_1", replace)
+// name(。) 表示幫做圖命名
+histogram res_b, name("Q4_11_hist_1", replace)
+twoway (scatter res_b ln_totexp ), name("Q4_11_scatter_1", replace)
+
+// 會出成新檔案 Q4_11_hist_1.eps，使用的做圖為之前存的 Q4_11_hist_1，如果已經存在就替代
+graph export "Q4_11_hist_1.eps", name("Q4_11_hist_1") replace
+graph export "Q4_11_scatter_1.eps", name("Q4_11_scatter_1") replace
 
 		/*===================
 		//		(2)		模型預估殘差的峰度與偏度
@@ -174,8 +189,11 @@ eststo est_e: reg ln_food ln_totexp
 estimates restore est_e
 predict res_e, residual
 
-histogram res_e, saving("Q4_11_hist_2", replace)
-twoway (scatter res_e ln_totexp ), saving("Q4_11_scatter_2", replace)
+histogram res_e, name("Q4_11_hist_2", replace)
+twoway (scatter res_e ln_totexp ), name("Q4_11_scatter_2", replace)
+
+graph export "Q4_11_hist_2.eps", name("Q4_11_hist_2") replace
+graph export "Q4_11_scatter_2.eps", name("Q4_11_scatter_2") replace
 
 
 quietly sum res_b, detail
@@ -227,9 +245,11 @@ elas_g total_ex_p75 est_g
 estimates restore est_g
 predict res_h, residual
 
-histogram res_h, saving("Q4_11_hist_3", replace)
-twoway (scatter res_h ln_totexp ), saving("Q4_11_scatter_3", replace)
+histogram res_h, name("Q4_11_hist_3", replace)
+graph export "Q4_11_hist_3.eps", name(Q4_11_hist_3) replace
 
+twoway (scatter res_h ln_totexp ), name("Q4_11_scatter_3", replace)
+graph export "Q4_11_scatter_3.eps", name("Q4_11_scatter_3") replace
 
 quietly sum res_h, detail
 di "Kurtosis	: " r(kurtosis)
@@ -264,7 +284,7 @@ predict pred_g, xb
 }		
 
 qui cor food pred_b pred_e pred_g
-matlist r(C)[1..., "food"]	
+matlist r(C)
 					
 /*
 	單純看相關性的話，第一個模型 (食物支出比例 ~ ln 總支出)的相關性最高
