@@ -1,0 +1,18 @@
+\begin{frame}
+    \frametitle{被解釋變數為對數時的預測區間}
+    如果回歸為
+    \begin{equation*}
+        \ln(Y) = X\beta + e
+    \end{equation*}
+    因為進行OLS時的假設為 $e\sim \mathcal{N}(0, \sigma_e^2)$
+
+    所以會成常態分佈的，不是$Y$，而是$\ln(Y)$
+    \vfill
+    此時$Y$的對數是常態分佈，所以Y的分佈叫做「對數常態分佈」
+
+    對數常態分佈的期望值為
+    \begin{equation*}
+        E[Y] = e^{(\mu + \frac{\sigma^2}{2})}
+    \end{equation*}
+
+\end{frame}
