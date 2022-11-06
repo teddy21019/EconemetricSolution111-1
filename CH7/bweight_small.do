@@ -28,7 +28,7 @@ eststo est_b : reg bweight mbsmoke
 */
 
 //c 
-eststo est_c : reg bweight mbsmoke mmarried mage prenatal1 fbaby
+eststo est_c : reg bweight mmarried mage prenatal1 fbaby
 
 //d 
 bysort mbsmoke : eststo : reg bweight mmarried mage prenatal1 fbaby
