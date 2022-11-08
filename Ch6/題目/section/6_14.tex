@@ -1,0 +1,65 @@
+\begin{frame}
+    \frametitle{題幹}
+
+    資料跟上一題一樣，為 br5
+
+    回歸模型為
+    \begin{equation}
+    \ln(PRICE)=\beta_1 + \beta_2 SQFT + \beta_3 AGE + \beta_4 AGE^2 + e
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+    \frametitle{a--係數與標穩誤差}
+    略
+\end{frame}
+
+\begin{frame}
+    \frametitle{b--繪圖}
+    繪製 $E[\ln(PRICE) \mid SQFT = 22, AGE]$ 的估計值
+
+    \vfill
+
+    最簡單做法是直接畫函數樣貌
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{c--聯合檢定}
+
+    \begin{enumerate}
+        \item 大小相同 but 屋齡 5 \& 80 的房屋，預期價格相同
+        \item 2000 平方英尺 5年新房 = 2800平方英尺 30 年老房
+    \end{enumerate}
+    
+    \vfill
+
+    最簡便方法為用 \texttt{test} 直接進行聯合檢定。\texttt{test} 中可以進行任意估計參數的線性組合。 
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{d--聯合檢定}
+    \begin{enumerate}
+        \item 屋齡 50 之後越來越貴
+        \item 2200平方英尺的 50 年老房，預期價格為 $\ln(100)$ 
+    \end{enumerate}
+
+    \vfill
+    (i) 表示預期價格對屋齡的斜率在屋齡=50之後>0
+\end{frame}
+
+\begin{frame}
+    \frametitle{e--加入變數}
+    加入變數 $BATHS, SQFT \times BEDROOMS$。
+    \vfill
+    略
+\end{frame}
+
+\begin{frame}
+    \frametitle{f--測試新模型有無增加預測能力}
+
+    檢定 (e) 新增的兩項變數的係數是否不為零。
+    
+
+\end{frame}

@@ -1,0 +1,88 @@
+\begin{frame}
+    \frametitle{題幹}
+
+    使用資料檔 \texttt{toody5} 中的資料，估算模型
+    \begin{equation}
+        Y_t = \beta_1 + \beta_2 TREND_t + \beta_3 RAIN_t + \beta_4 RAIN_t^2 + \beta_5 (RAIN_t \times TREND_t) + e_t 
+    \end{equation}
+
+    \begin{itemize}
+        \item $Y_t$：第t年小麥產量
+        \item $TREND_t$：趨勢變數。1950=0, 1997=4.7 $(\frac{year - 1950}{10})$
+        \item $RAIN$：總雨量
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{a--估計值、標準誤差、t值、p值}
+        \begin{enumerate}
+            \item 先用 reg 跑回歸
+            \item 用 esttab 顯示各項統計
+        \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{esttab 進階應用}
+    \begin{lstlisting}
+estout, cells("b(star fmt(3)) se t p") ///
+    varlabels( c.rain#c.rain rain^2 c.rain#c.trend rain*trend _cons constant ) /// 重新命名 var
+    starlevels(+ 0.1 * 0.05 ** 0.01 *** 0.001)\end{lstlisting}
+    \vfill
+    \begin{enumerate}
+        \item \texttt{cells}：一個est中要放哪些統計量
+        \item \texttt{varlabels}：重新命名變數顯示名稱
+        \item \texttt{starlevels}：重新定義顯著水準符號
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{b -- 顯著性}
+    透過 \texttt{starlevels}來重新定義顯著水準符號，觀察更多統計水準
+\end{frame}
+
+\begin{frame}
+    \frametitle{c -- 是否符合預期？}
+    這邊focus 在兩個交乘項的直覺
+    \begin{itemize}
+        \item $rain^2$ ：雨太多反而會淹死，所以直覺上他的邊際產出會遞減，也就是預期
+        \begin{center}
+                $rain^2$ 係數 $<0$
+        \end{center}
+        \item $rain \times trend$：：隨著技術進步，多下雨帶來的效益就會越小（因為這是抗旱的科技）
+        反而在科技卓越時，下雨反而會帶來不便。因此預期
+        \begin{center}
+            交乘項係數 $<0$
+        \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{d -- 估計邊際效果}
+    想要看：
+    \begin{enumerate}
+        \item 1959年： $TREND_t=0.9$，$RAIN_t=2.98$
+        \item 1995年： $TREND_t=4.5$，$RAIN_t=4.79$
+    \end{enumerate}
+
+    \vfill
+    透過 \texttt{margin, dydx(rain) at(...)} 來看邊際影響
+\end{frame}
+
+\begin{frame}
+    \frametitle{e -- d小題那兩年，使產出最大的降雨量}
+    產出最大時，對降雨量微分應為零
+    \begin{equation*}
+        Y_t = \beta_1 + \beta_2 TREND_t + \beta_3 RAIN_t + \beta_4 RAIN_t^2 + \beta_5 (RAIN_t \times TREND_t) + e_t 
+    \end{equation*}
+
+    \begin{equation}
+        \frac{d Y_t}{d RAIN_t} = \beta_3 + 2\beta_4 RAIN_t + \beta_5 TREND_t=0
+    \end{equation}
+    \begin{equation}
+        \label{eq:max_rain}
+        \{RAIN_t\}_{max} = \frac{-\beta_3 -\beta_5 TREND_t}{2\beta_4}
+    \end{equation}
+
+    \vfill
+    透過 nlcom 輸入式~\ref{eq:max_rain}~找出這個值
+\end{frame}

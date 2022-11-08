@@ -1,0 +1,46 @@
+\begin{frame}
+    \frametitle{題幹}
+
+    在 baseline model 上增加回歸變量，並挑選最好的
+
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item $AGE, SQFT, AGE^2$
+        \setcounter{enumi}{8}
+        \item 新增 $BATHS$
+        \item $BATHS, BEDROOMS$
+        \item $BATHS, BEDROOMS \times SQFT$
+        \item $BATHS, BEDROOMS \times SQFT BATH \times SQFT$
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{高明做法}
+    可以用global + foreach 兩個指令，簡潔地寫出程式碼。
+
+    \vfill
+
+    AIC, BIC, RMSE 等等都可以用 esttab 輕鬆算出。
+\end{frame}
+
+\begin{frame}
+    \frametitle{模型選擇結果}
+    \begin{table}
+        \centering
+        \scalebox{0.9}{
+            \input{../Result/6_10.tex}
+        }
+    \end{table}
+\end{frame}
+
+\begin{frame}
+    \frametitle{AIC, BIC 的值}
+
+    \begin{alertblock}{AIC、BIC 相對值才有意義}
+        一般而言 AIC、BIC由概似函數計算，而非課本提及之公式（事實上是概似函數去掉標準化常數後的值）。
+
+        兩邊做出來值會差很多，但重點是不同模型之間的相對大小。
+    \end{alertblock}
+    
+
+\end{frame}
