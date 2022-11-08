@@ -10,7 +10,14 @@ cd "$chapter_dir/Results"
 
 use http://www.stata.com/data/s4poe5/data/bweight_small
 
-//a
+
+    				//======================//
+    				//						//
+    				//			(a)			//
+    				//						//
+    				//======================//
+    
+
 ttest bweight, by(mbsmoke)
 
 /*
@@ -18,7 +25,14 @@ ttest bweight, by(mbsmoke)
 	注意！這還不能說明抽菸是不是真的「影響」嬰兒體重
 */
 
-//b 
+
+    				//======================//
+    				//						//
+    				//			(b)			//
+    				//						//
+    				//======================//
+    
+ 
 eststo est_b : reg bweight mbsmoke
 
 /* 			是否可視為「平均處理效果 ATE ?」
@@ -29,10 +43,25 @@ eststo est_b : reg bweight mbsmoke
 
 */
 
-//c 
+
+    				//======================//
+    				//						//
+    				//			(c)			//
+    				//						//
+    				//======================//
+    
+
 eststo est_c : reg bweight mmarried mage prenatal1 fbaby
 
-//d 
+
+    				//======================//
+    				//						//
+    				//			(d)			//
+    				//						//
+    				//======================//
+    
+
+
 // 只對有抽菸的跑回歸
 eststo est_smoke	: reg bweight mmarried mage prenatal1 fbaby if mbsmoke==1
 scalar SSE_smoke=e(rss)	//抓出 SSE
@@ -62,7 +91,14 @@ reg bweight mbsmoke##(i.mmarried c.mage i.prenatal1 i.fbaby)
 test 1.mbsmoke 1.mbsmoke#1.mmarried 1.mbsmoke#c.mage 1.mbsmoke#1.prenatal1 1.mbsmoke#1.fbaby
 
 
-//e 
+
+    				//======================//
+    				//						//
+    				//			(e)			//
+    				//						//
+    				//======================//
+    
+
 
 			//利用矩陣運算，參考助教課影片
 			
