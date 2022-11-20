@@ -76,6 +76,12 @@ local ln_1010 = ln(1010)
 margin, at(ln_pop = `ln_58' ln_gdp=`ln_1010')
 
 // f 
+
+// 保險起見，還是把原本的回歸結果抓回來
+est restore est_c 
 margin, at(ln_pop = `ln_58' ln_gdp=`ln_1010') expression(predict(xb) - 20)
 
 // 或是用 lincom ，就不會出現用 delta method 造成變異數的誤差
+// 因為係數本身是一個估計，為隨機變數，透過 lincom 可以計算隨機變數經過線性組合之後的點估計與標準差
+// 最後減去 20 是為了讓她歸零，因為lincom 預設的虛無假設為=0
+lincom _b[_cons] + `ln_58' * _b[ln_pop] + `ln_1010' * _b[ln_gdp] - 20
