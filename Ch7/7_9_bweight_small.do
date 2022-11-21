@@ -2,8 +2,8 @@ clear
 eststo clear
 graph drop _all
 
-//global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch7"
-global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/CH7"
+global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch7"
+// global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/CH7"
 
 
 cd "$chapter_dir/Results"
@@ -90,6 +90,7 @@ di ( (SSE_R-SSE_U) / 5) / ( SSE_U /1190 )
 reg bweight mbsmoke##(i.mmarried c.mage i.prenatal1 i.fbaby)
 test 1.mbsmoke 1.mbsmoke#1.mmarried 1.mbsmoke#c.mage 1.mbsmoke#1.prenatal1 1.mbsmoke#1.fbaby
 
+testparm 1.mbsmoke#1.* 1.mbsmoke#c.*	// 同意思，精簡寫法
 
 
     				//======================//
@@ -98,6 +99,18 @@ test 1.mbsmoke 1.mbsmoke#1.mmarried 1.mbsmoke#c.mage 1.mbsmoke#1.prenatal1 1.mbs
     				//						//
     				//======================//
     
+			// 7-41 的做法，稍有不同
+
+foreach v of varlist mmarried mage prenatal1 fbaby{
+	capture drop demean_`v'
+	qui sum `v'
+	gen demean_`v'= `v' - r(mean)
+}
+
+global reg_var mmarried mage prenatal1 fbaby
+
+reg bweight mbsmoke $reg_var demean_*
+	
 
 
 			//利用矩陣運算，參考助教課影片
