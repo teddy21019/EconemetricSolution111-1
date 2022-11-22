@@ -8,70 +8,16 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{基本統計量}
+    \frametitle{ a- 基本統計量}
     \begin{itemize}
         \item 母親吸菸者，出生嬰兒體重的平均值
         \item 母親不吸菸者，出生嬰兒體重的平均值
         \item 使用 t 檢定，檢定兩族群平均體重是否相同。
     \end{itemize}
+    我們量出來的是什麼？
 \end{frame}
-
 \begin{frame}
-    \frametitle{分兩群做平均，能代表什麼嗎？}
-
-    考慮以下問題：
-
-    \begin{enumerate}
-        \item 醫生平均年薪 300萬
-        \item 高級社畜平均年薪 200萬
-        \item 所以高級社畜去當醫生，年薪可以增加？
-    \end{enumerate}
-    \vfill
-    請問哪裡怪怪的？
-
-\end{frame}
-
-\begin{frame}
-    \frametitle{我們到底想量測什麼東西？}
-
-    經濟學家有許多會想量測的「如果」問題，這些我們統稱為「處理效果」
-    \begin{enumerate}
-        \item[ATE] 如果隨機分配一個人去當醫生，他會比隨機分配他去當高級社畜多賺多少？
-        \item[ATT] 如果醫生沒當醫生，那他少賺多少？
-        \item[ATU] 如果把一個當了高級社畜的人抓去當醫生，他會多賺多少？
-        \item[LATE] 對一個只差一點點就上醫學系的高級社畜，讓他真的當醫生，可以多賺多少？
-    \end{enumerate}
-    
-    會需要考慮這麼多「處理效果」的原因，在於「結果通常不是隨機的」，而是「自我選擇的」
-\end{frame}
-
-\begin{frame}
-    \frametitle{各種處理效果}
-        潛在結果(potential outcome)：$y_i = D_i y_{1i} + (1-D_i) y_{0i}$
-    \begin{table}
-        \centering
-        \begin{tabular}{c | l}
-            \hline
-            ATE & $E[Y_1] - E[Y_0]$ \\
-            ATT & $E[Y_1 \mid D=1] - \begingroup \color{red} E[Y_0 \mid D=1]\endgroup$ \\
-            ATU & $\begingroup \color{red}E[Y_1 \mid D=0] \endgroup -  E[Y_0 \mid D=0]$ \\
-            \hline
-        \end{tabular}
-    \end{table}
-    \vfill
-    「新聞媒體」的「處理效果」：$E[Y_1 \mid D=1] - E[Y_0 \mid D=0]$
-    
-    當醫生的平均薪資 - 當社畜的平均薪資
-
-    事實是，會當高級社畜的人，當初可能就因為技能點不在三類，所以沒選擇當醫生。
-    所以這種新聞媒體的「處理效果」並不能回答「當醫生可以多賺多少（ATT）」
-    
-    我們需要想辦法找出「選擇當醫生的人，如果不當醫生，他的薪資會是多少」，也就是
-    $\begingroup \color{red} E[Y_0 \mid D=1]\endgroup$ （實際上觀測不到！）
-\end{frame}
-
-\begin{frame}
-    \frametitle{回到題目b--平均處理效果}
+    \frametitle{b--平均處理效果}
 
     回歸 $BWEIGHT = \beta_1 + \beta_2 MBSMOKE$，並解釋 $\beta_2$的係數
 
@@ -80,16 +26,109 @@
     \end{alertblock}
 \end{frame}
 
-\begin{frame}
-    \frametitle{解讀平均處理效果的條件}
+\begin{frame}[plain]
+    \begin{center}
+        讓我們先跳出題目，討論一下上面量出來的係數有沒有意義
+    \end{center}
+\end{frame}
 
-    \begin{block}{平均處理效果}
-        只有當「抽菸」與「不抽菸」的兩組，是隨機分配時，這樣的回歸結果才能解讀為「平均處理效果」
+
+\begin{frame}
+    \frametitle{分兩群做平均，能代表什麼嗎？}
+
+    考慮以下思考邏輯：
+
+    \begin{enumerate}
+        \item 醫生平均年薪 300萬
+        \item 高級社畜平均年薪 200萬
+        \item 所以高級社畜去當醫生，年薪可以增加（？）
+    \end{enumerate}
+    \vfill
+    \pause
+    請問哪裡怪怪的？
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{我們到底想量測什麼東西？}
+
+    「處理效果」- 如果有經過處理（ex: 丟去醫學系），會如何
+    \begin{enumerate}
+        \item[ATE] 如果隨機分配一個人去當醫生，他會比隨機分配他去當高級社畜多賺多少？
+        \item[ATT] 如果醫生沒當醫生，那他少賺多少？
+        \item[ATU] 如果把一個當了高級社畜的人抓去當醫生，他會多賺多少？
+        \item[LATE] 對一個只差一點點就上醫學系的高級社畜，讓他真的當醫生，可以多賺多少？
+    \end{enumerate}
+    \pause
+    會需要考慮這麼多「處理效果」的原因，在於「結果通常不是隨機的」，而是「自我選擇的」
+\end{frame}
+
+\begin{frame}
+    \frametitle{潛在結果框架}
+    \begin{equation}
+        y_i = D_i y_{1i} + (1-D_i) y_{0i}
+    \end{equation}
+    \pause
+    \begin{itemize}
+        \item $D_i$：個體 i 的選擇（當醫生=1，當社畜=0）
+        \item $y_{1i}$：個體 i 當醫生的年薪
+        \item $y_{0i}$：個體 i 當社畜的年薪
+        \item $y_{i}$：個體 i 實際的年薪
+    \end{itemize}
+    \pause
+    如果當醫生，只觀察的到 $y_{1i}$，無發觀察到 $y_{0i}$，反之亦然。
+    
+    我們稱另外一個為「反事實結果(counterfactual result)」。
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{各種處理效果}
+    \begin{table}
+        \centering
+        \begin{tabular}{c | l}
+            \hline
+            ATE & $E[Y_{1i}] - E[Y_{0i}]$ \\
+            ATT & $E[Y_{1i} \mid D_i=1] - \begingroup \color{red} E[Y_{0i} \mid D_i=1]\endgroup$ \\
+            ATU & $\begingroup \color{red}E[Y_{1i} \mid D_i=0] \endgroup -  E[Y_{0i} \mid D_i=0]$ \\
+            \hline
+        \end{tabular}
+    \end{table}
+    \vfill
+    「新聞媒體」的「處理效果」：$E[Y_{1i} \mid D_i=1] - E[Y_{0i} \mid D_i=0]$
+
+    \small
+    當醫生的平均薪資 - 當社畜的平均薪資 
+
+    事實是，會當高級社畜的人，當初可能就因為技能點不在三類，所以沒選擇當醫生。
+    所以這種新聞媒體的「處理效果」並不能回答「當醫生可以多賺多少（ATT）」
+    
+    我們需要想辦法找出「選擇當醫生的人，如果不當醫生，他的薪資會是多少」，也就是
+    $\begingroup \color{red} E[Y_{0i} \mid D_i=1]\endgroup$ （實際上觀測不到！）
+    \normalsize
+    
+\end{frame}
+
+\begin{frame}
+    \frametitle{什麼時候平均相減有意義？}
+    
+    如果潛在變數跟選擇沒有關聯：$\{Y_{0i}, Y_{1i}\} \indep D_i$
+    $E[Y_{1i} \mid D_i=1] - E[Y_{0i} \mid D_i=0] = E[Y_{1i}] - E[Y_{0i}]$
+
+
+    \begin{block}{隨機對照試驗 RCT}
+        如果當不當醫生是隨機分配的，則兩族群薪資平均差，就可以看成是ATE/ATT...。
+
+        薪資的平均差異，就代表了當醫生這件事對薪資的增幅。
+    \end{block}
+    我們可以放寬一點，假設在控制了某些條件之下，選擇會與潛在變數無關，我們稱之為條件獨立假設
+    \begin{block}{CIA}
+        $\{Y_{0i}, Y_{1i}\} \indep D_i \given X$
+
+        給定 X 之下，處理與否(D=1 or 0) 就與潛在結果無關。
     \end{block}
 
-    原因：抽菸與不抽菸是一種自我選擇的結果。
 
-    假說1：抽菸的女性普遍較不在意健康，所以懷孕時也因為不在意飲食健康等，使嬰兒體重減少。因此抽菸與懷孕只有相關，沒有因果。
 \end{frame}
 
 \begin{frame}
@@ -98,8 +137,8 @@
     隨機分配孕婦抽菸與不抽菸，檢查兩平均（做 a 小題的回歸），即可檢查平均處理效果。
 
     \begin{itemize}
-        \item 實驗不人道
-        \item 我們看到的資料卻只有選擇過後的結果
+        \item 實驗不人道，喪盡天良
+        \item 我們看到的資料卻只有孕婦自我選擇過後的結果
     \end{itemize}
     
     所以到底如何檢視ATE/ ATT？
@@ -107,7 +146,7 @@
         \item 靠一些自我選擇的模型，例如 Roy Model
         \item 靠工具變數(IV)-- 得出 LATE 
         \item 靠逆傾向分數加權(inverse propensity weighting) -- 在 CIA 下得出 ATE
-        \item \dots
+        \item 課本作法-- 在 CIA 下得出 ATE
     \end{enumerate}
 
     2000（自我選擇）, 2019（隨機實驗）, 2021（局部平均處理效果）年諾貝爾經濟學獎。
@@ -135,21 +174,14 @@
         如果假設我們的選擇（抽不抽菸），在控制了一些變數之後（是否已婚、有無做產檢、是否第一胎...），
         選擇就變成隨機的決定的話，那我們對選擇的係數，就可以詮釋為（條件）平均處理效果。\\
         [2em]
-        這種假設我們稱之為條件獨立假設 (CIA)。
-
+        這種假設我們稱之為條件獨立假設 (CIA)。\\
+        [2em]
         在此題的情況下，有滿強的理由認為就算控制這些變數，抽菸還是自我選擇的結果。
     \end{alertblock}    
-
-    在CIA之下，就可以用 inverse propensity weighting 的方式，計算 ATE 
-    \begin{align*}
-        ATE &= 
-        \sum_{MBSMOKE_i = 1} \left( \frac{BWEIGHT_i}{p(MBSMOKE)} \right) \\
-        &- \sum_{MBSMOKE_i = 0} \left( \frac{BWEIGHT_i}{1 - p(MBSMOKE)} \right)
-    \end{align*}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Chow Test}
+    \frametitle{d-Chow Test}
 
     抽菸到底會不會有差的另外一種檢定方式 -- 分組，看迴歸係數是否一樣
 
@@ -168,6 +200,8 @@
 \begin{frame}
     \frametitle{d 的另一種做法}
     如果 MBSMOKE 沒有影響，那麼加入他們的交乘項，應該係數都會是0
+
+    介紹新指令：\texttt{testparm}
 
 \end{frame}
 
