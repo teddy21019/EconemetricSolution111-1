@@ -1,6 +1,6 @@
 \begin{frame}
     \frametitle{題幹}
-    \begin{enumerate}
+    \begin{enumerate}[<+->]
         \item 母親吸菸對出生嬰兒會不會有影響？
         \item 直覺會有影響，但是實證上能不能證明？
         \item 資料集為 bweight\_small
@@ -53,7 +53,7 @@
     \frametitle{我們到底想量測什麼東西？}
 
     「處理效果」- 如果有經過處理（ex: 丟去醫學系），會如何
-    \begin{enumerate}
+    \begin{enumerate}[<+->]
         \item[ATE] 如果隨機分配一個人去當醫生，他會比隨機分配他去當高級社畜多賺多少？
         \item[ATT] 如果醫生沒當醫生，那他少賺多少？
         \item[ATU] 如果把一個當了高級社畜的人抓去當醫生，他會多賺多少？
@@ -94,6 +94,7 @@
             \hline
         \end{tabular}
     \end{table}
+    \pause
     \vfill
     「新聞媒體」的「處理效果」：$E[Y_{1i} \mid D_i=1] - E[Y_{0i} \mid D_i=0]$
 
@@ -115,12 +116,13 @@
     如果潛在變數跟選擇沒有關聯：$\{Y_{0i}, Y_{1i}\} \indep D_i$
     $E[Y_{1i} \mid D_i=1] - E[Y_{0i} \mid D_i=0] = E[Y_{1i}] - E[Y_{0i}]$
 
-
+    \pause
     \begin{block}{隨機對照試驗 RCT}
         如果當不當醫生是隨機分配的，則兩族群薪資平均差，就可以看成是ATE/ATT...。
 
         薪資的平均差異，就代表了當醫生這件事對薪資的增幅。
     \end{block}
+    \pause
     我們可以放寬一點，假設在控制了某些條件之下，選擇會與潛在變數無關，我們稱之為條件獨立假設
     \begin{block}{CIA}
         $\{Y_{0i}, Y_{1i}\} \indep D_i \given X$
