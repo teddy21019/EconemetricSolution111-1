@@ -1,0 +1,37 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{2}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}\\
+            &\multicolumn{1}{c}{OLS}&\multicolumn{1}{c}{OLS with Robust SE}\\
+\hline
+bar         &       0.216\sym{**} &       0.216\sym{*}  \\
+            &    (0.0786)         &    (0.0961)         \\
+[1em]
+street      &      -0.262\sym{***}&      -0.262\sym{**} \\
+            &    (0.0794)         &    (0.0968)         \\
+[1em]
+school      &       0.164\sym{***}&       0.164\sym{***}\\
+            &    (0.0238)         &    (0.0244)         \\
+[1em]
+age         &     -0.0210\sym{***}&     -0.0210\sym{***}\\
+            &   (0.00145)         &   (0.00130)         \\
+[1em]
+rich        &       0.292\sym{***}&       0.292\sym{***}\\
+            &    (0.0304)         &    (0.0296)         \\
+[1em]
+alcohol     &       0.240\sym{***}&       0.240\sym{***}\\
+            &    (0.0358)         &    (0.0377)         \\
+[1em]
+attractive  &       0.239\sym{***}&       0.239\sym{***}\\
+            &    (0.0316)         &    (0.0374)         \\
+[1em]
+\_cons      &       5.752\sym{***}&       5.752\sym{***}\\
+            &    (0.0913)         &     (0.106)         \\
+\hline
+\(N\)       &        3016         &        3016         \\
+\hline\hline
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}

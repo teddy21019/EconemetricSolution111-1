@@ -2,8 +2,8 @@ clear
 eststo clear
 graph drop _all
 
-global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch7"
-// global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/CH7"
+global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch8"
+// global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/CH8"
 
 
 cd "$chapter_dir/Results"
@@ -13,8 +13,9 @@ use http://www.stata.com/data/s4poe5/data/mexican
 // a 
 
 
-eststo est_a : reg lnprice bar street school age rich alcohol attractive 
+eststo est_a, title("OLS") : reg lnprice bar street school age rich alcohol attractive 
 
+eststo est_ar, title("OLS Robust") : reg lnprice bar street school age rich alcohol attractive, r
 
 // b nr2 test
 
@@ -71,7 +72,7 @@ di "GQ					:" gq
 di "L Critical value	:" invF(df_1, df_0, 0.025)
 di "R Critical value	:" invFtail(df_1, df_0, 0.025)
 
-di "P value				:" Ftail(df_1, df_0, max(gq, 1/gq) ) * 2
+di "P value				:" Ftail(df_1, df_0, max(gq, 1/gq) )
 
 // d 
 
@@ -99,3 +100,22 @@ eststo est_f : reg lnprice ( i.bar i.street i.school c.age i.rich i.alcohol )##a
 
 testparm 1.attractive#1.* 1.attractive#c.*
 
+// extra : 進行 FGLS
+
+est restore est_a           // 1
+
+predict res_a, residual     // 2
+gen ln_res_a2 = ln(res_a^2)
+reg ln_res_a2 age attractive
+
+predict ln_e_hat            // 3
+gen e_hat=exp(ln_e_hat)
+
+eststo est_FGLS_hand, title("FGLS by Hand"):      /// 4
+    reg lnprice bar street school age rich alcohol attractive ///
+    [aweight=1/e_hat]
+	
+eststo est_FGLS, title("FGLS"): hetregress lnprice bar street school age rich alcohol attractive, /// 
+    twostep het(age attractive)
+
+esttab, mti se unstack
