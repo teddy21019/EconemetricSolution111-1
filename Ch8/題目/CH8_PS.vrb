@@ -1,0 +1,15 @@
+\frametitle{用 Chow test 檢定兩組係數是否相同}
+
+\begin{lstlisting}
+eststo est_d : reg lnprice ( i.bar i.street i.school c.age i.rich i.alcohol )##attractive
+testparm 1.attractive#1.* 1.attractive#c.*
+\end{lstlisting}
+
+其結果為：
+\begin{align*}
+    F_{7,  3002} =   29.95 \\
+    Prob > F =    0.0000
+\end{align*}
+兩者係數顯著不一樣。
+
+
