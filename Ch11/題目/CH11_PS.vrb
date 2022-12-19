@@ -1,0 +1,10 @@
+\frametitle{檢定2SLS}
+可以用
+\begin{lstlisting}
+estat firststage \end{lstlisting}
+來檢定第一階段
+
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{fig/result_11-11-e.png}
+    \end{figure}
+

@@ -1,0 +1,76 @@
+\begin{frame}
+    \frametitle{內生性}
+    
+    什麼時候（最需要）考慮內生性
+    \begin{itemize}
+        \item Y跟X被共同因子決定
+        \begin{itemize}
+            \item 薪資與工作決定--- 能力
+            \item 嬰兒體重與母親抽菸 --- 健康意識
+            \item 道路出事率與車種 --- 使用者族群
+        \end{itemize}
+        \item Y跟X同時被決定
+        \begin{itemize}
+            \item 價格與數量 --- 需求 \& 供給
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{工具變數與 2SLS}
+    解決方法
+    \begin{enumerate}
+        \item 找一個影響 X 但不影響 Y 的變數
+        \item 做一次回歸把「乾淨的X」過濾出來
+        \item 再一次回歸，把 Y 對 「乾淨的X」做回歸
+    \end{enumerate}
+    \vfill
+    可以用 \texttt{ivregress} 指令輕鬆做到
+
+    \begin{lstlisting}
+        ivregress 2sls y x1 x2 (x3 = z1 z2 z3), first \end{lstlisting}
+\begin{itemize}
+    \item 解釋變數為 y
+    \item \texttt{x3} 為內生變數，有些因子共同影響 \texttt{x3} 與 \texttt{y}
+    \item \texttt{z1 z2 z3} 影響 \texttt{x3} 但不影響 \texttt{y}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{聯立模型}
+    如果模型長這樣
+    \begin{align*}
+        q_i &= \alpha_1 + \alpha_2 p_i + \alpha_3 A_i + \alpha_4 B_i + u_i &\text{供給} \\
+        q_i &= \beta_1 + \beta_2 p_i + \beta_3 C_i + \beta_4 D_i + v_i &\text{需求} \\
+    \end{align*}
+    
+    則 p, q 被共同決定，所以也內生性問題。
+    \begin{enumerate}
+        \item 先估計縮減式 $p_i = A+B+C+D$ 得到第一階段預測 $\hat{p}_i$
+        \item 估計供給：
+        \begin{equation*}
+            q_i = \alpha_1 + \alpha_2\hat{p}_i + \alpha_3 A_i + \alpha_4 B_i + u_i
+        \end{equation*}
+        \item 估計需求：
+        \begin{equation*}
+            q_i = \beta_1 + \beta_2 \hat{p}_i + \beta_3 C_i + \beta_4 D_i + v_i
+         \end{equation*}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{聯立模型 --- Stata}
+    
+    作法一、
+    \begin{lstlisting}
+ivregress 2sls q (p=C D) A B, first
+
+ivregress 2sls q (p=A B) C D, first \end{lstlisting}
+    \vfill
+    作法二、用 3SLS 來估計聯立模型
+    \begin{lstlisting}
+reg3 (q p A B)(q p C D), endog(q p)\end{lstlisting}   
+
+\end{frame}

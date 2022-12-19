@@ -1,0 +1,125 @@
+\begin{frame}
+    \frametitle{考慮雞肉市場的供需}
+
+    {\footnotesize
+    \begin{align*}
+        \ln(Q_t) &= \alpha_1 + \alpha_2 \ln(P_t) + \alpha_3 \ln(Y_t) + \alpha_4 \ln(PB_t) + \alpha_5 POPGRO_t + e_t^d \\ 
+        \ln(QPROD_t) &= \beta_1 + \beta_2 \ln(P_t) + \beta_3 \ln(PF_t) + \beta_4 TIME_t + \beta_5 \ln(QPROD_{t-1}) + e_t^s
+    \end{align*}
+    }
+
+    \begin{itemize}
+        \item 需求：
+        \begin{itemize}
+            \item 價錢
+            \item 人均收入
+            \item 牛肉價格
+            \item 人口成長率
+        \end{itemize}
+        \item 供給：
+        \begin{itemize}
+            \item 價格
+            \item 飼料價格
+            \item 年份指數
+            \item 上一期的供給量
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{先看需求}
+
+    內生變數：消費量、價格
+
+    \begin{block}{內生變數}
+        由模型決定出來的變數稱為內生變數。在這裡價格與數量，是市場供需調整後定下的。
+
+        非模型決定則為外生變數
+    \end{block}
+
+    \vfill
+    一個反向思考的方式為，其他被認為是外生變數的，有沒有可能其實有內生性？
+
+    例如有無可能「某些原因同時使雞肉供給數量減少，也造成出生率下降」？
+    \pause
+    \begin{exampleblock}{內外生的判斷}
+        內外生的判斷通常需要一些經濟理論模型與經濟直覺，也需要一些「故事」來motivate 這樣的想法。
+        本身並沒有一個絕對的對錯，但常常如果沒想到有哪些共同決定 Y 與 X 的故事，就會出現不正確的因果推論。
+    \end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{單純地進行估計}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            常見的錯誤：單純把結構式進行OLS\\[3em]
+            
+            需求線負斜率並不顯著
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{table}
+                \centering
+                \scalebox{0.9}{
+                \input{../Results/11-11-b.tex}
+                }
+            \end{table}
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{工具變數 IV}
+
+    那些因素共同影響均衡需求量與價格？ --- 供給線！
+    跟供給有關的有
+    \begin{itemize}
+        \item (價格)
+        \item 飼料價格
+        \item 年份指數
+        \item 上一期的供給量
+    \end{itemize}
+    
+    \vfill 
+    
+    將這些變數作為工具變數，做兩階段估計
+\begin{lstlisting}
+ivregress 2sls ln_q (ln_p = ln_pf time qprod_l lexpts_l) ln_y ln_pb popgro\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            選定供給線中的外生變數當IV進行兩階段估計\\[3em]
+            
+            需求線負斜率顯著
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{table}
+                \centering
+                \scalebox{0.9}{
+                \input{../Results/11-11-d.tex}
+                }
+            \end{table}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{檢定2SLS}
+可以用
+\begin{lstlisting}
+estat firststage \end{lstlisting}
+來檢定第一階段
+    
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{fig/result_11-11-e.png}
+    \end{figure}
+
+\end{frame}
