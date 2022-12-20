@@ -2,8 +2,8 @@ clear
 eststo clear
 graph drop _all
 
-//global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch11"
-global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/Ch11"
+global chapter_dir="C:\Users\tedb0\Documents\111-1\EconometricSolution111-1\Ch11"
+// global chapter_dir="/Users/abc/Desktop/111-1/東海計量/Solution/Ch11"
 
 
 cd "$chapter_dir/Results"

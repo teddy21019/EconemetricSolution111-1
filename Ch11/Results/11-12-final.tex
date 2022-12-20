@@ -1,0 +1,25 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{3}{c}}
+\hline\hline
+            &\multicolumn{1}{c}{est\_b}&\multicolumn{1}{c}{est\_2SLS}&\multicolumn{1}{c}{est\_2SLS\_HAC}\\
+\hline
+ln\_p        &      0.0252         &      0.0446         &      0.0446         \\
+            &    (0.0671)         &     (0.123)         &    (0.0891)         \\
+[1em]
+ln\_pf       &     -0.0999\sym{*}  &      -0.105\sym{*}  &      -0.105         \\
+            &    (0.0421)         &    (0.0486)         &    (0.0571)         \\
+[1em]
+time        &      0.0113\sym{*}  &      0.0120\sym{*}  &      0.0120\sym{*}  \\
+            &   (0.00503)         &   (0.00589)         &   (0.00599)         \\
+[1em]
+L.ln\_qprod  &       0.727\sym{***}&       0.718\sym{***}&       0.718\sym{***}\\
+            &     (0.104)         &     (0.110)         &     (0.132)         \\
+[1em]
+\_cons      &       2.154\sym{**} &       2.214\sym{**} &       2.214\sym{*}  \\
+            &     (0.782)         &     (0.800)         &     (1.001)         \\
+\hline\hline
+\multicolumn{4}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{4}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}

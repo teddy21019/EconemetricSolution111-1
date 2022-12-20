@@ -113,13 +113,116 @@ ivregress 2sls ln_q (ln_p = ln_pf time qprod_l lexpts_l) ln_y ln_pb popgro\end{l
 
 \begin{frame}[fragile]
     \frametitle{檢定2SLS}
-可以用
+    用以下指令來檢定第一階段
 \begin{lstlisting}
 estat firststage \end{lstlisting}
-來檢定第一階段
     
     \begin{figure}
-        \includegraphics[width=0.8\textwidth]{fig/result_11-11-e.png}
+        \includegraphics[width=0.7\textwidth]{fig/result_11-11-e.png}
     \end{figure}
+    一般選用 F>10 作為好的 IV 的標準 --- 無法拒絕是一個弱IV
+\end{frame}
 
+
+\begin{frame}[fragile]
+    \frametitle{另類檢驗法}
+
+    也可以土法煉鋼去檢驗
+    \begin{lstlisting}
+reg ln_p ln_pf time qprod_l lexpts_l ln_y ln_pb popgro 
+test ln_pf time qprod_l lexpts_l \end{lstlisting}
+    
+        \begin{block}{第一階段的變數}
+            在進行第一階段估計時，除了工具變數以外，其他外生變數也要一併納入估計。
+            
+            而檢驗則只需要做工具變數的聯合檢定。
+        \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{時間序列上的現象}
+    老師跳過了時間序列的部分，透過這題稍微補充。
+
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{../Results/11-11_AC.png}
+        \caption{殘差項的折線圖}
+    \end{figure}
+    
+\end{frame}
+
+\begin{frame}
+    \frametitle{時間序列上面的變異數異質性}
+
+    異質性
+    \begin{itemize}
+        \item $e_i \sim \mathcal{N}(0, \sigma_i^2), \sigma_i^2 = h(x_i\beta)$
+        \item $e_t = \rho e_{t-1} + \nu_t$
+    \end{itemize}
+
+    兩種都違反 OLS 的假設，第二種 $cov(e_t, e_{t-1})\ne 0$，稱為自相關 (autocorrelation)。
+    這時模型出現了自相關誤差(autoregressive error)。
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{自相關誤差解決方法}
+
+    與一般異質性問題類似，可以兩種做法
+    \begin{enumerate}
+        \item 將錯就錯，但好好把有自相關時的變異數計算出來 --- Heteroskedasticity and Autocorrelation Consistent(HAC) Standard Error
+        \item 將變數做改變 --- GLS
+    \end{enumerate}
+
+    \vfill
+
+    以這題為例，示範計算兩階段估計時，遇到有自相關的時候的穩健做法 --- HAC 穩健標準誤差。
+    
+    \begin{lstlisting}
+ivregress 2sls ln_q (ln_p = ln_pf time qprod_l lexpts_l) ln_y ln_pb popgro, ///
+vce(hac nw 2) first \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Newey-West HAC 標準誤差}
+\begin{lstlisting}
+ivregress 2sls ln_q (ln_p = ln_pf time qprod_l lexpts_l) ln_y ln_pb popgro, ///
+vce(hac nw 2) first \end{lstlisting}
+    \begin{itemize}
+        \item 指令中的 \texttt{vce} 告訴 Stata 要特別計算標準誤差。
+        \item \texttt{hac} 表示要考慮異質性(heteroskedasticity)與自相關(autocorrelation)的問題
+        \item \texttt{nw} 表示要用 Newey-West (1987) 的計算方法（不用管）
+        \item \texttt{2} 表示在考慮自相關時，要考慮兩期的落後，也就是 $e_t = \rho_1 e_{t-1} + \rho_2 e_{t-2} + \nu_t$。期數選擇超出範圍
+        \item 如果不指定數字，就是用 N-2期 lag (容易over fit)
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}
+    \frametitle{視覺化殘差像之間的自相關}
+    一般來說會有兩種
+    \begin{itemize}
+        \item Autocorrelation function --- 
+        
+        \begin{equation*}
+            \frac{corr(y_t, y_{t+h})}{\sqrt{var(y_t) var(y_{t+h})}}
+        \end{equation*}
+        \begin{equation*}
+            y_t = {\color{red} \hat{\rho}^{AC}_{t-k}} y_{t-k} + \mu_t
+        \end{equation*}
+        \item Partial autocorrelation function --- 
+        \begin{equation*}
+            \frac{corr(y_t , y_{t+h} \given y_{t\dots t+h-1} )}{\sqrt{var(y_t\given y_{t\dots t+h-1})var(y_{t+h}\given y_{t\dots t+h-1})}}
+        \end{equation*}
+        \begin{equation*}
+            y_t = \alpha + \alpha_1 y_{t-1} +\alpha_2 y_{t-2} + \dots + {\color{red} \hat{\rho}^{PAC}_{t-k}} y_{t-k} +  + \mu_t
+        \end{equation*}
+    \end{itemize}
+
+    選不同的 $h$ ，都有對應的 AC, PAC，可以連同標準誤差畫出來
+
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{../Results/ac pac.png}
+    \end{figure}
 \end{frame}

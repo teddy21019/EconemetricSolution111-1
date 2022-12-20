@@ -1,0 +1,97 @@
+\begin{frame}
+    \frametitle{供給}
+    \begin{equation*}
+        \ln(QPROD_t) = \beta_1 + \beta_2 \ln(P_t) + \beta_3 \ln(PF_t) + \beta_4 TIME_t + \beta_5 \ln(QPROD_{t-1}) + e_t^s
+    \end{equation*}
+
+    內生變數：供給量、價格\\
+    外生變數：
+    \begin{itemize}
+        \item 飼料價格
+        \item 年份指數
+        \item 上一期的供給量
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{單純地進行估計}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            跟前面一樣，先看看常見的錯誤：單純把結構式進行OLS\\[3em]
+            
+           供給線斜率不顯著為正
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{table}
+                \centering
+                \scalebox{0.9}{
+                \input{../Results/11-12-b.tex}
+                }
+            \end{table}
+        \end{column}
+    \end{columns}
+    
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{第一階段的顯著性}
+    
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            工具變數：
+            \begin{itemize}
+                \item 人均收入
+                \item 牛肉價格
+                \item 人口成長率
+                \item 上一期的出口
+            \end{itemize}
+
+            第一階段聯合檢定
+            \begin{lstlisting}
+test ln_y ln_pb popgro L.lexpts \end{lstlisting}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            \begin{table}
+                \centering
+                \scalebox{0.6}{
+                \input{../Results/11-12-c.tex}
+                }
+            \end{table}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{作法二}
+    也可以直接在 \texttt{ivregress} 
+    \begin{lstlisting}
+eststo est_2SLS : ivregress 2sls ln_qprod (ln_p = ln_y ln_pb popgro L.lexpts) /// 
+    ln_pf time L.ln_qprod, first
+
+estat first\end{lstlisting}
+    
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{fig/result_11-12-c.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{供給函數的 2SLS}
+\begin{lstlisting}
+eststo est_2SLS : ivregress 2sls ln_qprod ///
+    (ln_p = ln_y ln_pb popgro L.lexpts) /// 
+    ln_pf time L.ln_qprod, first \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{結果}
+
+    \begin{table}
+        \scalebox{0.9}{
+        \input{../Results/11-12-final.tex}
+        }
+    \end{table}
+\end{frame}
