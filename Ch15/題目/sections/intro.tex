@@ -1,0 +1,75 @@
+\begin{frame}
+    \frametitle{Panel Data}
+
+    \begin{table}
+        \begin{tabular}{c c | r r r}
+            年份 & 工廠 & 產出 & 土地 & 勞動力 \\
+            \hline \hline
+            2020 & 甲 & 10箱 & 100坪 & 200人 \\
+            2021 & 甲 & 15箱 & 96坪 & 300人 \\
+            2022 & 甲 & 9箱 & 110坪 & 100人 \\
+            \hline
+            2020 & 乙 & 20箱 & 87坪 & 248人 \\
+            2021 & 乙 & 29箱 & 93坪 & 310人 \\
+            2022 & 乙 & 33箱 & 110坪 & 402人 \\
+            \hline
+            2020 & 丙 & 3箱 & 20坪 & 18人 \\
+            2021 & 丙 & 6箱 & 28坪 & 32人 \\
+            2022 & 丙 & 2箱 & 11坪 & 13人 \\
+        \end{tabular}
+    \end{table}
+    \begin{itemize}
+        \item 有時間
+        \item 平衡(balanced)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{table}
+        \begin{tabular}{c c | r r r}
+            學生編號 & 老師 & 分數 & 曠課次數 & 家庭年收入 \\
+            \hline \hline
+            1 & 甲 & 90 & 10次 & 200萬 \\
+            2 & 甲 & 87 & 9次 & 300萬 \\
+            3 & 甲 & 80 & 11次 & 100萬 \\
+            \hline
+            4 & 乙 & 100 & 8次 & 248萬 \\
+            5 & 乙 & 95 & 3次 & 310萬 \\
+            6 & 乙 & 92 & 1次 & 402萬 \\
+            \hline
+            7 & 丙 & 88 & 2次 & 18萬 \\
+            8 & 丙 & 57 & 8次 & 32萬 \\
+            9 & 丙 & 76 & 1次 & 13萬 \\
+        \end{tabular}
+    \end{table}
+    \begin{itemize}
+        \item 沒有時間
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Panel Data Regression}
+    當迴歸式中，要納入分群的「效果」，例如
+    \begin{itemize}
+        \item 不同廠商效率不同
+        \item 不同老師教學品質不同
+    \end{itemize}
+    就可以被視為一個面板數據
+
+    \begin{equation*}
+        y_{it} = \beta_1 + \beta_2 x_{it} +  \beta_3 z_{it} + {\color{red} \alpha_i} + \epsilon_{it}
+    \end{equation*}
+
+    $\alpha_i$ 象徵這個人(廠商)，在不同時間點，共同有的性質
+    \begin{enumerate}
+        \item 固定效果 FE --- $\alpha_i$ 代表不同個體有不同截距
+        \item 隨機效果 RE --- $\alpha_i$ 是在誤差項
+    \end{enumerate}
+
+    \begin{block}{Panel Data 要有時間嗎？}
+        一般來說講到 Panel Data 都會有時間，但沒有時間的資料，
+        也可以當成 Panel Data 來處理 FE 與 RE，你們的作業就是這樣的例子
+    \end{block}
+
+\end{frame}
+

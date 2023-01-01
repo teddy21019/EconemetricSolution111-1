@@ -1,0 +1,55 @@
+\begin{frame}[fragile]
+    \frametitle{指定為 Panel data}
+
+    \begin{lstlisting}
+xtset id time \end{lstlisting}
+\begin{enumerate}
+    \item \texttt{id} 替換成群組（廠商、教師、國家...）
+    \item \texttt{time} 替代為時間變數
+\end{enumerate}
+
+如果不指定 time，則指會指定群組，依然可以做 FE RE，但沒辦法做「時間固定效果(time fixed effet)」
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{固定效果}
+
+    作法一、
+    \begin{lstlisting}
+reg y land labor i.firm \end{lstlisting}
+
+    建議作法、
+    \begin{lstlisting}
+xtreg y land labor, fe \end{lstlisting}    
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{隨機效果}
+
+    \begin{lstlisting}
+xtreg y land labor, re \end{lstlisting}    
+
+    檢定隨機效果 (LM test)
+    \begin{lstlisting}
+xttest0 \end{lstlisting}    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{FE 還是 RE?}
+    如果兩者係數差不多，用 RE 比較有效 (efficient)。
+
+    但如果差很多，那要用 FE，才會是一致的(consistent)
+
+    \begin{block}{係數差不多？}
+        用 Hausman Test 來檢定兩者回歸係數有無顯著差異
+
+        H0 : 係數一樣\\
+        Ha : 係數不一樣
+
+        拒絕 Hausman Test 的虛無假設 --- 接受不一樣 $\implies$ 要用 FE
+    \end{block}
+
+\end{frame}
+

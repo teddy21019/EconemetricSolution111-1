@@ -1,0 +1,22 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{4}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{est\_a\_ols}&\multicolumn{1}{c}{est\_d\_re}&\multicolumn{1}{c}{est\_e\_fe}&\multicolumn{1}{c}{est\_e\_fe\_cl}\\
+\hline
+log of capital      &       0.104\sym{***}&       0.102\sym{***}&      0.0519\sym{***}&      0.0519\sym{***}\\
+                    &   (0.00677)         &   (0.00787)         &    (0.0130)         &    (0.0157)         \\
+[1em]
+log of labor        &       0.105\sym{***}&       0.130\sym{***}&       0.106\sym{***}&       0.106\sym{***}\\
+                    &   (0.00987)         &    (0.0117)         &    (0.0205)         &    (0.0261)         \\
+[1em]
+log of materials    &       0.742\sym{***}&       0.700\sym{***}&       0.597\sym{***}&       0.597\sym{***}\\
+                    &   (0.00636)         &   (0.00764)         &    (0.0117)         &    (0.0287)         \\
+[1em]
+Constant            &       1.641\sym{***}&       1.948\sym{***}&       3.500\sym{***}&       3.500\sym{***}\\
+                    &    (0.0485)         &    (0.0638)         &     (0.166)         &     (0.290)         \\
+\hline\hline
+\multicolumn{5}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{5}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+}

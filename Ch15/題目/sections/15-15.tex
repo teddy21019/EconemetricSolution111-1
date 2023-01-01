@@ -1,0 +1,205 @@
+\begin{frame}
+    \frametitle{化工廠的例子}
+
+    想要知道銷售與
+    \begin{itemize}
+        \item 資本
+        \item 勞動
+        \item 原料
+    \end{itemize}
+    之間的關係
+
+    \begin{align*}
+        \ln(SALES_{it}) = \beta_1 &+ \beta_2 \ln(CAPITAL_{it})
+        + \beta_3 \ln(LABOR_{it}) \\
+        & + \beta_4 \ln(MATERIAL_{it}) 
+        + u_i + e_{it}
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{OLS}
+
+    不管廠商之間生產力的差別，統一做回歸
+    \begin{lstlisting}
+eststo est_a_ols : reg lsales lcapital llabor lmaterials \end{lstlisting}
+    
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{穩健標準差}
+    \begin{itemize}
+        \item 
+    (CH8) 如果 $e_{it}$ 的變異數隨個體而異，可以請 stata 考慮進去，回報「穩健標準誤差」
+    \begin{lstlisting}
+eststo est_a_r : reg lsales lcapital llabor lmaterials, r \end{lstlisting}
+        \item  
+        如果想讓同一群廠商變異數一樣，可以指定為「群聚穩健標準誤差(clustered robustness SE)」
+        \begin{lstlisting}
+eststo est_a_clus : reg lsales lcapital llabor lmaterials, vce(cluster firm) \end{lstlisting}
+\end{itemize}
+    告訴Stata ： 我知道有異質性變異數不符合OLS的假設，但將錯就錯，算出這時候該有的標準誤差吧，不過同一家廠商的變異數應該是一樣的。
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{OLS 不同標準誤差下的結果}
+
+    \begin{table}
+        \input{../Results/15-15_OLS.tex}
+    \end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{固定效果}
+
+    在估計固定效果之前，一定要記得告訴Stata 他是 Panel Date
+
+    \begin{lstlisting}
+xtset firm year \end{lstlisting}
+    \vfill
+    再估計固定效果 
+\begin{lstlisting}
+eststo est_e_fe : xtreg lsales lcapital llabor lmaterials, fe \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{隨機效果}
+    不指定做法，預設上會採用隨機效果。但為了明確性，還是建議加上 re
+\begin{lstlisting}
+eststo est_d_re : xtreg lsales lcapital llabor lmaterials, re \end{lstlisting}
+
+    \vfill
+    可以接著用 Breusch and Pagan LM 檢定，來檢定隨機效果（相對於OLS）有沒有使用的必要
+\begin{lstlisting}
+xttest0 \end{lstlisting}  
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{FE 與 RE，都幾？}
+
+    用 Hausman Test
+    \begin{lstlisting}
+hausman est_e_fe est_d_re \end{lstlisting}  
+    
+    \vfill
+
+    在 Hausman Test 中拒絕了虛無假設，因此認定 FE 與 RE 的係數顯著有差異。
+
+    這時應該繼續用 FE 來避免不一致性。
+    \vfill
+
+    如果Hausman Test 無法拒絕虛無假設，表示其實 FE RE 兩著估計的係數差不多，
+    那應該要選 RE，因為這種估計會更有效(efficient)。就像使用 FGSL 處理異質變異數一樣。
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{回歸結果}
+
+    \begin{table}
+        \input{../Results/15-15_compare.tex}
+    \end{table}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{一點經濟學--- 固定規模報酬的檢定}
+
+    Cobb-Douglas 生產函數 $Y=A K^{\alpha} L^{\beta} M^{\gamma}$
+    \begin{itemize}
+        \item 廠商理論與總體經濟常用的生產函數
+        \item $\alpha + \beta + \gamma > 1$ --- 規模報酬遞增
+        \item $\alpha + \beta + \gamma = 1$ --- 固定規模報酬 (CRTS)
+    \end{itemize} 
+
+    \begin{align*}
+        \tilde{Y} &= A(2K)^{\alpha} (2L)^{\beta} (2M)^{\gamma} \\
+        &= 2^{\alpha + \beta + \gamma} A K^{\alpha} L^{\beta} M^{\gamma}\\
+        &= 2 Y \qquad \text{if } \alpha + \beta + \gamma = 1
+    \end{align*}
+    當所有要素都增加一倍，產出也剛好增加一倍，稱為固定規模報酬
+
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{對數下的 C-D 生產函數}
+    將 Cobb-Douglas 生產函數取對數
+    \begin{equation*}
+        \ln(Y) = \ln(A) + \alpha \ln(K) + \beta \ln(L) + \gamma \ln(M)
+    \end{equation*}
+
+    對照
+
+    \begin{align*}
+        \ln(SALES_{it}) = \beta_1 &+ \beta_2 \ln(CAPITAL_{it})
+        + \beta_3 \ln(LABOR_{it}) \\
+        & + \beta_4 \ln(MATERIAL_{it}) 
+        + u_i + e_{it}
+    \end{align*}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{檢定固定規模報酬}
+
+    題目 15-15 的 (b) 小題，用OLS以及穩健標準誤差下的結果，檢驗固定規模報酬
+
+\begin{lstlisting}
+global ols_list est_a_ols est_a_r est_a_clus
+
+foreach m of global ols_list{
+    est restore `m'
+    test lcapital+llabor+lmaterials = 1
+    lincom lcapital+llabor+lmaterials-1
+}\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{彈性}
+
+    資本對產出的彈性定義為
+    \begin{equation*}
+        \frac{\ln(K)}{\ln(Y)}
+    \end{equation*}
+
+    恰好就是回歸式中 $CAPITAL$ 的係數。 
+\end{frame}
+
+\begin{frame}
+    \frametitle{份額}
+    而這些回歸係數還有一個經濟意涵，就是資本份額與勞動份額
+
+    在完全競爭市場中， $MPL = w$，勞動邊際產出需要等於工資。
+
+    Cobb-Douglas 稱產函數中的勞動邊際產出為
+
+    \begin{equation*}
+       MPL = \frac{dY}{dL} = \beta A K^{\alpha} L^{\beta - 1} M^{\gamma} = \beta \frac{Y}{L}
+    \end{equation*}
+
+    因此勞工的薪資則是
+
+    \begin{equation*}
+        wL = MPK \times L  = \beta \frac{Y}{L} \times L = \beta Y
+    \end{equation*}
+
+    也就是生產函數 $Y=A K^{\alpha} L^{\beta} M^{\gamma}$ 之下，勞工共分得總產出的 $\beta$ 部分。
+    因此稱 $\beta$ 為勞動份額。
+
+    一樣恰好就是回歸式中 $LABOR$ 的係數。
+\end{frame}
+
+\begin{frame}
+    \frametitle{透過經濟理論尋找適合的計量模型}
+
+    經濟理論 $\implies$ 變數關係 $\implies$ 計量模型 $\implies$ 實證研究
+
+\end{frame}

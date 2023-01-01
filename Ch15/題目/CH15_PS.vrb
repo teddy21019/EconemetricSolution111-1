@@ -1,0 +1,13 @@
+\frametitle{檢定固定規模報酬}
+
+    題目 15-15 的 (b) 小題，用OLS以及穩健標準誤差下的結果，檢驗固定規模報酬
+
+\begin{lstlisting}
+global ols_list est_a_ols est_a_r est_a_clus
+
+foreach m of global ols_list{
+    est restore `m'
+    test lcapital+llabor+lmaterials = 1
+    lincom lcapital+llabor+lmaterials-1
+}\end{lstlisting}
+
